@@ -79,7 +79,7 @@ class _ListDataState extends State<ListData> {
   });
     tes.map((k){
       setState(() {
-              print(_keteranganControll[k].text);
+              hasil.add(_keteranganControll[k].text);
             });
           
     }).toList();
