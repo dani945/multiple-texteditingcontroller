@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: Colors.blue,
-    ),
+    theme: ThemeData.dark(),
     debugShowCheckedModeBanner: false,
     home: ListData(),
   ));
@@ -16,94 +14,81 @@ class ListData extends StatefulWidget {
 }
 
 class _ListDataState extends State<ListData> {
-//   final themeData = Theme.of(context);
-//     final textTheme = themeData.textTheme;
-//     final themeBody = textTheme.body1.copyWith(fontSize: 16);
-  List<dynamic> data = ['satu','dua','tiga'];
-//   var data = {0: "Tom", 1: 'tom@xyz.com'}; 
-    final _keteranganControll = <TextEditingController>[];
-  List hasil = new List();
+  final data = <String>['satu', 'dua', 'tiga'];
+  final controllers = <TextEditingController>[];
+  final children = <Widget>[];
 
-  
   @override
-  Widget build(BuildContext context) { 
+  void initState() {
+    super.initState();
     
-    
-    final children = <Widget>[
+    for (int i=0; i<data.length; i++) {
+      final f = data[i];
+      final controller = TextEditingController(text: f);
+      controllers.add(controller);
+      children.add(Material(
+        child: ListTile(
+          title: Text(
+            'Description index-$i',
+          ),
+          subtitle: new TextField(
+            controller: controller,
+            decoration: InputDecoration(labelText: 'Description'),
+            onChanged: (val) {
+              data[i] = val;
+            },
+          ),
+        ),
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final childrenListView = <Widget>[
       Container(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 32, bottom: 4),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 32,
+          bottom: 4,
+        ),
         alignment: Alignment.bottomLeft,
-        child: Text('BANTUAN PENGOBATAN'),
+        child: Text('TREATMENT'),
       ),
       Divider(height: 0),
-      
       SizedBox(height: 32),
-    ];    
+    ];
     
-//     final index = data.asMap();
-//     var idx = index.keys.toList();
-//     idx.forEach((g){
-//       print(g);
-//     });
-  var index = 0;
-    List tes = new List();
-  data.forEach((f){
-    var idx = index++;
-    tes.add(idx);
-    _keteranganControll.add(new TextEditingController());
-    children.add(Material(
-      color: Colors.red,
-      child: ListTile(
-        title: Text(
-          'Keterangan index ke-${idx}',
-          style: TextStyle(color: Colors.black)
-        ),
-        subtitle: new TextField(
-          controller: _keteranganControll[idx],
-          decoration: InputDecoration(
-          labelText: 'Keterangan'
-        ),
-        onChanged: (val){
-          // _ketCont.text = val;
-          
-          // _ket.add(_keteranganControll[t.index].text);
-          setState(() {
-            
-          });
-        },
-      ),
-      ),
-    )
-  );
-    
-  });
-    tes.map((k){
-      setState(() {
-              hasil.add(_keteranganControll[k].text);
-            });
-          
-    }).toList();
-    
+    if (children.isNotEmpty) {
+      childrenListView.addAll(children);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('tes'),
+        title: Text('Multiple TextEditingController'),
       ),
       body: ListView(
-        children: children,
+        children: childrenListView,
       ),
-      bottomNavigationBar:
-      Row(
-      children: <Widget>[
-        RaisedButton(
-      onPressed: (){
-        print(hasil);
-      },
-        child: Text('Tekan'),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            RaisedButton(
+              onPressed: () {
+                print(data.join(', '));
+              },
+              child: Text('Print Output'),
+            ),
+          ],
+        ),
       ),
-      ],
-      )
-      
-    );  
-    
+    );
   }
 }
